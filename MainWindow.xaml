@@ -1,0 +1,64 @@
+﻿<Window x:Class="ConnectFour.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:ConnectFour"
+		xmlns:conv="clr-namespace:ConnectFour.view.converters"
+        mc:Ignorable="d"
+        Title="ConnectFour">
+	<Window.Resources>
+		<conv:PlayerToColorConverter x:Key="playerToColorConverter"/>
+	</Window.Resources>
+	<ScrollViewer HorizontalScrollBarVisibility="Auto" VerticalScrollBarVisibility="Auto">
+		<DockPanel>
+			<StackPanel DockPanel.Dock="Top">
+				<Rectangle Height="50"/>
+				<WrapPanel HorizontalAlignment="Center">
+					<TextBlock FontSize="20" Background="{Binding Path=Controller.CurrentPlayer, UpdateSourceTrigger=PropertyChanged,
+							Converter={StaticResource playerToColorConverter}}" Text="Player:  " />
+					<TextBlock FontSize="20" Text="{Binding Path=Controller.CurrentPlayer, UpdateSourceTrigger=PropertyChanged}"
+						Background="{Binding Path=Controller.CurrentPlayer, UpdateSourceTrigger=PropertyChanged,
+														Converter={StaticResource playerToColorConverter}}" />
+				</WrapPanel>
+			</StackPanel>
+
+			<!--- https://src-bin.com/en/q/d93e1 -->
+			<ItemsControl ItemsSource="{Binding Path=Circles}" Margin="0,36,0,31" Width="{Binding Path=CanvasWidth}"
+																					Height="{Binding Path=CanvasHeight}">
+				<ItemsControl.ItemsPanel>
+					<ItemsPanelTemplate>
+						<Canvas DockPanel.Dock="Bottom" MouseLeftButtonDown="cnv_MouseLeftButtonDown" >
+							<Canvas.Background>
+								<DrawingBrush TileMode="Tile" Viewport="{Binding Path=CanvasViewport}" 
+										 ViewportUnits="Absolute">
+									<DrawingBrush.Drawing>
+										<GeometryDrawing Brush="MediumBlue">
+											<GeometryDrawing.Geometry>
+												<RectangleGeometry Rect="0,0,50,50"/>
+											</GeometryDrawing.Geometry>
+											<GeometryDrawing.Pen>
+												<Pen Brush="GreenYellow" Thickness="1"/>
+											</GeometryDrawing.Pen>
+										</GeometryDrawing>
+									</DrawingBrush.Drawing>
+								</DrawingBrush>
+							</Canvas.Background>
+						</Canvas>
+					</ItemsPanelTemplate>
+				</ItemsControl.ItemsPanel>
+				<ItemsControl.ItemTemplate>
+					<DataTemplate>
+						<Ellipse Fill="{Binding Path=Player, UpdateSourceTrigger=PropertyChanged, Converter={StaticResource playerToColorConverter}}" Width="{Binding Path=R}" Height="{Binding Path=R}" />
+					</DataTemplate>
+				</ItemsControl.ItemTemplate>
+				<ItemsControl.ItemContainerStyle>
+					<Style>
+						<Setter Property="Canvas.Top" Value="{Binding Path=Y}" />
+						<Setter Property="Canvas.Left" Value="{Binding Path=X}" />
+					</Style>
+				</ItemsControl.ItemContainerStyle>
+			</ItemsControl>
+		</DockPanel>
+	</ScrollViewer>
+</Window>
